@@ -1,0 +1,12 @@
+"use client";
+
+export default function Experiment1() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
+      <div className="container mx-auto p-8">
+        <h1 className="text-3xl font-bold mb-4">Experiment 1</h1>
+        <p className="text-gray-300">Hand Tracking and debug</p>
+      </div>
+    </div>
+  );
+}
