@@ -52,6 +52,7 @@ MIT
 ## ✍️ Author
 
 Igor Ferreira - igorkmail@gmail.com
+![alt text](image.png)
 
 ## References
 
