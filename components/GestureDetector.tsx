@@ -71,6 +71,7 @@ export default function GestureDetector() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gesture, setGesture] = useState<string>("");
+  const [debugInfo, setDebugInfo] = useState<{ name: string; score: number; allGestures: any[] } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
 
@@ -178,7 +179,7 @@ export default function GestureDetector() {
         );
 
         const hands = await detector.estimateHands(video);
-        
+
         if (hands.length > 0) {
           const keypoints = hands[0].keypoints;
           const result = keypoints.map(kp => [kp.x, kp.y]);
@@ -192,13 +193,22 @@ export default function GestureDetector() {
                 return p.score > c.score ? p : c;
               });
 
+              setDebugInfo({
+                name: bestGesture.name,
+                score: bestGesture.score,
+                allGestures: est.gestures.map((g: any) => ({ name: g.name, score: g.score.toFixed(2) }))
+              });
+
               if (bestGesture.score > 9.9) {
                 setGesture(gestureStrings[bestGesture.name] || "");
+              } else {
+                setGesture("");
               }
             }
           }
         } else {
           setGesture("");
+          setDebugInfo(null);
         }
 
         animationId = requestAnimationFrame(runDetection);
@@ -210,7 +220,7 @@ export default function GestureDetector() {
     const init = async () => {
       try {
         setIsLoading(true);
-        
+
         // Load TensorFlow backend
         await tf.ready();
 
@@ -291,6 +301,21 @@ export default function GestureDetector() {
           <h1 className="absolute bottom-8 right-8 text-8xl">
             {gesture}
           </h1>
+        )}
+        {debugInfo && (
+          <div className="absolute top-8 left-8 bg-black/80 p-4 rounded text-sm font-mono">
+            <p className="font-bold text-white mb-2">🔍 Debug Info</p>
+            <p className="text-yellow-300">Melhor: {debugInfo.name}</p>
+            <p className="text-green-300">Score: {debugInfo.score.toFixed(2)}</p>
+            <div className="mt-2 border-t border-gray-600 pt-2">
+              <p className="text-gray-300 text-xs mb-1">Todos os gestos:</p>
+              {debugInfo.allGestures.map((g, i) => (
+                <p key={i} className="text-gray-400 text-xs">
+                  {g.name}: {g.score}
+                </p>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
