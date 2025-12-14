@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import * as handpose from "@tensorflow-models/handpose";
+import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 // @ts-ignore - fingerpose doesn't have TypeScript types
@@ -76,7 +76,7 @@ export default function GestureDetector() {
 
   useEffect(() => {
     let animationId: number;
-    let model: handpose.HandPose;
+    let detector: handPoseDetection.HandDetector;
     let gestureEstimator: any;
 
     const drawPoint = (
@@ -159,7 +159,7 @@ export default function GestureDetector() {
     const detectGestures = async () => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      if (!video || !canvas || !model) return;
+      if (!video || !canvas || !detector) return;
 
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -177,14 +177,16 @@ export default function GestureDetector() {
           canvas.height
         );
 
-        const predictions = await model.estimateHands(video);
+        const hands = await detector.estimateHands(video);
         
-        if (predictions.length > 0) {
-          const result = predictions[0].landmarks;
+        if (hands.length > 0) {
+          const keypoints = hands[0].keypoints;
+          const result = keypoints.map(kp => [kp.x, kp.y]);
           drawKeypoints(ctx, result);
 
-          if (gestureEstimator && predictions[0].landmarks) {
-            const est = gestureEstimator.estimate(predictions[0].landmarks, 9);
+          if (gestureEstimator && keypoints) {
+            const landmarks = keypoints.map(kp => [kp.x, kp.y, kp.z || 0]);
+            const est = gestureEstimator.estimate(landmarks, 9);
             if (est.gestures.length > 0) {
               const bestGesture = est.gestures.reduce((p: any, c: any) => {
                 return p.score > c.score ? p : c;
@@ -226,8 +228,13 @@ export default function GestureDetector() {
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
 
-        // Load handpose model
-        model = await handpose.load();
+        // Load hand pose detection model
+        const model = handPoseDetection.SupportedModels.MediaPipeHands;
+        const detectorConfig = {
+          runtime: 'tfjs' as const,
+          maxHands: 1,
+        };
+        detector = await handPoseDetection.createDetector(model, detectorConfig);
 
         // Initialize gesture estimator
         const knownGestures = [
