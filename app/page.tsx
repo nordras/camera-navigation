@@ -1,4 +1,4 @@
-import GestureDetector from "@/components/GestureDetector";
+import GestureDetector from "@/components/GestureDetectorV2";
 
 export default function Home() {
   return (
