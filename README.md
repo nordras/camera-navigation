@@ -60,3 +60,5 @@ https://www.youtube.com/watch?v=sXNZlNrNhpc
 https://youtu.be/pON_ftmsR40
 https://medium.com/deloitte-uk-tech-blog/how-to-control-desktop-apps-and-websites-using-hand-gestures-e2605283b3a4
 https://www.computerworld.com/article/1580856/web-site-uses-camera-for-navigation-by-hand-gestures.html
+https://github.com/tensorflow/tfjs-models/tree/master/handpose
+https://www.tensorflow.org/js/models
