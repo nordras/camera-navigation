@@ -1,6 +1,6 @@
 # Camera Navigation - Gesture Detection
 
-Web application for gesture detection using computer vision with TensorFlow.js and Handpose.
+Web application for gesture detection using computer vision with TensorFlow.js, Handpose and Next.js.
 
 ## 📝 Description
 
@@ -11,17 +11,19 @@ This project uses the browser's camera to detect hand gestures in real-time, rec
 
 ## 🚀 Technologies
 
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety
 - **TensorFlow.js** - Machine learning framework
 - **Handpose** - Hand detection model
 - **FingerPose** - Gesture recognition library
-- **HTML5 Canvas** - Visual rendering
+- **Tailwind CSS** - Styling
 - **WebRTC** - Camera access
 
 ## 📋 Prerequisites
 
+- Node.js 18+ installed
 - Modern web browser with WebRTC support
 - Camera connected to the device
-- Local web server (due to CORS policy)
 
 ## 🔧 How to Run
 
@@ -29,20 +31,38 @@ This project uses the browser's camera to detect hand gestures in real-time, rec
 ```bash
 git clone <repository-url>
 cd camera-navigation
-open index.html
 ```
 
-2. Allow camera access when prompted
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Run the development server:
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+5. Allow camera access when prompted
 
 ## 📁 Project Structure
 
 ```
 camera-navigation/
-├── index.html          # Main interface
-├── index.js            # Gesture detection logic
-├── package.json        # Project configuration
-├── .gitignore         # Files ignored by Git
-└── README.md          # Documentation
+├── app/
+│   ├── layout.tsx       # Root layout
+│   ├── page.tsx         # Home page
+│   └── globals.css      # Global styles
+├── components/
+│   └── GestureDetector.tsx  # Main gesture detection component
+├── index.html          # Legacy HTML version (deprecated)
+├── index.js            # Legacy JS version (deprecated)
+├── package.json        # Dependencies and scripts
+├── tsconfig.json       # TypeScript configuration
+├── next.config.ts      # Next.js configuration
+└── README.md           # Documentation
 ```
 
 ## 📄 License
